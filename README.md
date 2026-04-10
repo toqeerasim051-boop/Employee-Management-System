@@ -114,4 +114,5 @@ The application uses the Google Maps JavaScript API for location rendering.
 For production environments, replace the API key as follows:
 <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 
+To access external tecnologies click on External.md
 
