@@ -1,20 +1,56 @@
-This project uses a REST API for employee management operations.
+# 🌐 External Dependencies
 
-Base URL:
-https://api.findofficers.com/hiring_test
+This project integrates external libraries to enhance functionality, design, and user experience.
 
-The API is used for:
-- Fetching activation codes
-- Adding employee records
-- Retrieving all employee data
+---
 
-  This project uses modern UI libraries to enhance design and user experience:
+## 🎨 UI Libraries & Tools
 
-- Bootstrap 5  
-  Used for responsive layout, grid system, forms, buttons, and UI components.
+### 🟦 Bootstrap 5
 
-- Font Awesome  
-  Used for icons across the application (navigation, buttons, and UI enhancements).
+Used for:
 
-- Google Maps JavaScript API  
-  Used for displaying employee locations on an interactive map.
+* Responsive layout system
+* Grid system
+* Forms and input styling
+* Buttons and UI components
+
+---
+
+### ⭐ Font Awesome
+
+Used for:
+
+* Navigation icons
+* Action buttons
+* UI visual enhancements
+
+---
+
+## 🗺️ Mapping Library
+
+### 🧭 Leaflet.js
+
+Used for:
+
+* Displaying interactive maps
+* Adding employee location markers
+* Handling map interactions
+
+---
+
+### 🌍 OpenStreetMap
+
+Used as:
+
+* Free map tile provider
+* Background map layer for Leaflet
+* No API key or billing required
+
+---
+
+## 💡 Notes
+
+* All external libraries are loaded via CDN
+* Fully free and open-source mapping solution
+* Lightweight client-side architecture for fast performance
