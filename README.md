@@ -1,118 +1,146 @@
-# Employee Management System
+# 🧑‍💼 Employee Management System
 
-A web-based Employee Management System designed to efficiently manage employee records, including personal information, geographic locations, and searchable listings. The application integrates REST APIs, Google Maps, and browser-based storage to provide a seamless and responsive user experience.
-
----
-
-## Overview
-
-This project provides a complete client-side solution for managing employee data with real-time synchronization between backend services and local storage. It supports employee registration, data visualization, and interactive mapping of employee locations.
+A web-based Employee Management System designed to efficiently manage employee records, including personal information, geographic locations, and searchable listings. The application provides a responsive interface with interactive mapping and browser-based data storage for a smooth user experience.
 
 ---
 
-## Key Features
+## 📌 Overview
 
-- **Employee Registration**  
-  Add new employees with detailed personal and geographic information.
+This project is a full client-side + lightweight backend-integrated system for managing employee data. It allows users to add employees, view structured listings, and visualize their locations on an interactive map using a free mapping solution.
 
-- **Employee Directory**  
-  View all employees in a structured table with search, sorting, and pagination capabilities.
-
-- **Location Visualization**  
-  Display employee locations on an interactive Google Map with dynamic marker handling.
-
-- **Hybrid Data Persistence**  
-  Combines backend API storage with browser `localStorage` for improved reliability and offline resilience.
-
-- **Authentication Mechanism**  
-  Implements activation-code-based API authentication for secure data transactions.
-
-- **Responsive Interface**  
-  Fully responsive design compatible with desktop, tablet, and mobile devices.
+The system supports real-time updates and combines external data (if available) with browser storage for better flexibility.
 
 ---
 
-## Technology Stack
+## ✨ Key Features
 
-- **HTML5** – Semantic and structured markup
-- **CSS3** – Custom styling, layout design, and responsiveness
-- **JavaScript (ES6+)** – Application logic, asynchronous operations, and DOM manipulation
-- **Bootstrap 5** – UI components and responsive grid system
-- **Font Awesome** – Iconography
-- **Google Maps JavaScript API** – Location rendering and map interaction
-- **REST API Integration** – External backend communication
+* **Employee Registration**
+  Add employees with personal details and location coordinates.
+
+* **Employee Directory**
+  View all employees in a structured table with search and pagination.
+
+* **Location Visualization**
+  Display employee locations on an interactive map with markers and popups.
+
+* **Smart Marker Handling**
+  Automatically adjusts overlapping locations for better visibility.
+
+* **Hybrid Data Storage**
+  Uses browser storage for added employees and optional backend data sources.
+
+* **Responsive Design**
+  Fully optimized for desktop, tablet, and mobile devices.
 
 ---
 
-## Project Structure
+## 🛠️ Technology Stack
+
+* **HTML5** – Page structure
+* **CSS3** – Styling and responsive layout
+* **JavaScript (ES6+)** – Application logic and interactivity
+* **Bootstrap 5** – UI components and responsive grid system
+* **Font Awesome** – Icons
+* **Leaflet.js** – Interactive mapping library
+* **OpenStreetMap** – Free map tile provider
+* **Browser Storage (localStorage / sessionStorage)** – Data persistence
+
+---
+
+## 📁 Project Structure
+
 employee-management-system/
 │
-├── index.html # Landing / Home page
-├── add.html # Employee registration form
-├── view.html # Employee listing (search, sort, pagination)
-├── location.html # Google Maps-based visualization
-└── README.md # Project documentation
+├── index.html        # Home page / dashboard
+├── add.html          # Add employee form
+├── view.html         # Employee listing (search, sort, pagination)
+├── location.html     # Interactive map view (Leaflet + OSM)
+└── README.md         # Project documentation
 
-Launch the application:
-Open index.html directly in a modern web browser
-No build process or local server is required
+---
 
-Note: Internet connectivity is required for API requests, Google Maps, Bootstrap CDN, and Font Awesome resources.
+## ▶️ How to Run
 
-Usage
-Home Page
+* Open `index.html` directly in a modern web browser
+* No build tools or server required
 
-Serves as the central navigation hub for all system functionalities.
+### ⚠️ Requirements:
 
-Add Employee
+Internet connection is needed for:
 
-Users can register employees by providing:
+* Bootstrap CDN
+* Font Awesome
+* OpenStreetMap tiles
 
-Name and contact details
-City and country information
-Latitude and longitude for map integration
+---
 
-Upon submission:
+## 🚀 Usage
 
-An activation code is requested from the backend
-Employee data is stored in both the API and local storage
-Confirmation feedback is displayed via notifications
-Employee Directory
+### 🏠 Home Page
 
-Provides a structured view of all employee records with:
+Navigation hub for all system features.
 
-Real-time search functionality
-Sorting by name, city, or country
-Pagination (5 records per page)
+---
 
-Data is aggregated from both backend API and local storage sources.
+### ➕ Add Employee
 
-Location Mapping
+Users can add employees with:
 
-Displays all employees on a Google Map interface:
+* Name and contact details
+* City and country
+* Latitude and longitude for mapping
 
-Interactive markers with employee details
-Intelligent marker offsetting for overlapping coordinates
-Real-time updates for newly added employees
-API Integration
-Endpoint	Method	Description
-/get_activation_code	POST	Generates API authentication code
-/add_employee	POST	Adds a new employee record
-/get_all_employee	POST	Retrieves all employee records
+Data is stored in browser storage and rendered dynamically.
 
-Base URL: https://api.findofficers.com/hiring_test
+---
 
-Data Management
-Backend API: Primary storage for persistent employee records
-localStorage: Stores locally added employees (newEmployees)
-sessionStorage: Temporarily stores activation codes per session
-Data is merged dynamically during application runtime
-Google Maps Configuration
+### 📋 Employee Directory
 
-The application uses the Google Maps JavaScript API for location rendering.
+Displays employee data with:
 
-For production environments, replace the API key as follows:
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
-  
-To access external technologies, click here: [External.md](External.md)
+* Search functionality
+* Pagination (5 records per page)
+* Structured table layout
 
+---
+
+### 🗺️ Location Map
+
+Interactive map features:
+
+* Employee markers on map
+* Popup showing employee details
+* Smart handling of overlapping locations
+* Auto-refresh updates
+
+---
+
+## 🔄 Data Management
+
+* **localStorage** → Stores newly added employees
+* **sessionStorage** → Temporary session data
+* **Optional external source** → Used if backend data exists
+
+All data is merged dynamically at runtime.
+
+---
+
+## 🧠 Project Purpose
+
+This project demonstrates:
+
+* Frontend development skills
+* JavaScript logic and DOM manipulation
+* Interactive map integration
+* Data handling and storage techniques
+* Real-world UI system design
+
+---
+
+## 🏆 Key Highlights
+
+* Fully functional employee tracking system
+* No paid APIs or billing required
+* Clean, responsive UI design
+* Real-time map visualization
+* Portfolio-ready project for internships
