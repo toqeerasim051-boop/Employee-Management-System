@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Employees</title>
+<title>Employees - Newly Added Only</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -34,6 +34,9 @@ button.active-page { background-color: #2575fc; color: white; border: none; marg
 button.active-page:hover { opacity: 0.8; }
 button.page-btn { background: #e2e8f0; border: none; margin: 0 3px; padding: 5px 12px; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; }
 button.page-btn:hover { background: linear-gradient(90deg,#6a11cb,#2575fc); color: white; transform: translateY(-2px); }
+/* Empty state */
+.empty-state { text-align: center; padding: 40px; color: #6c757d; }
+.empty-state i { font-size: 48px; margin-bottom: 15px; }
 </style>
 </head>
 <body>
@@ -59,7 +62,7 @@ button.page-btn:hover { background: linear-gradient(90deg,#6a11cb,#2575fc); colo
 <!-- Employees Table -->
 <div class="container">
     <div class="card">
-        <div class="card-header">Employees</div>
+        <div class="card-header"><i class="fas fa-user-plus me-2"></i> Newly Added Employees Only</div>
 
         <!-- Search & Sort -->
         <div class="row mb-3">
@@ -87,6 +90,7 @@ button.page-btn:hover { background: linear-gradient(90deg,#6a11cb,#2575fc); colo
                         <th>Phone</th>
                         <th>City</th>
                         <th>Country</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="empTable"></tbody>
@@ -100,51 +104,88 @@ button.page-btn:hover { background: linear-gradient(90deg,#6a11cb,#2575fc); colo
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-const API_BASE = "https://api.findofficers.com/hiring_test";
 let employees = [];
 let currentPage = 1;
 const rowsPerPage = 5;
 
-// 🔹 Get activation code
-async function getActivationCode() {
+// 🔹 Load ONLY newly added employees from localStorage (NOT from backend)
+function loadEmployees() {
     try {
-        const res = await fetch(`${API_BASE}/get_activation_code`, { method: "POST" });
-        const data = await res.json();
-        return data.activationCode;
-    } catch (err) {
-        console.error("Activation code fetch error:", err);
-        return null;
-    }
-}
-
-// 🔹 Load employees from backend + localStorage
-async function loadEmployees() {
-    try {
-        const code = await getActivationCode();
-        if (!code) throw new Error("Activation code fetch failed");
-
-        const res = await fetch(`${API_BASE}/get_all_employee`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ activationCode: code })
-        });
-        const backendEmployees = await res.json();
+        // Get only local employees - NO backend API call
         const localEmployees = JSON.parse(localStorage.getItem("newEmployees") || "[]");
-        employees = [...backendEmployees, ...localEmployees];
-
+        employees = [...localEmployees];
+        
         renderTable();
 
-        // 🔹 Toast show after employees loaded
-        const toastEl = document.getElementById('loadToast');
-        const toast = new bootstrap.Toast(toastEl);
-        toast.show();
-
+        // Show toast if employees exist
+        if (employees.length > 0) {
+            const toastEl = document.getElementById('loadToast');
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
     } catch (err) {
         console.error("Error loading employees:", err);
     }
 }
 
-// 🔹 Render table
+// 🔹 Delete employee
+function deleteEmployee(index) {
+    if (confirm("Are you sure you want to delete this employee?")) {
+        employees.splice(index, 1);
+        localStorage.setItem("newEmployees", JSON.stringify(employees));
+        renderTable();
+        
+        // Show delete confirmation toast
+        const toastEl = document.getElementById('loadToast');
+        const toastBody = toastEl.querySelector('.toast-body');
+        toastBody.textContent = 'Employee deleted successfully!';
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+        setTimeout(() => {
+            toastBody.textContent = 'Employees loaded successfully!';
+        }, 2000);
+    }
+}
+
+// 🔹 Edit employee
+function editEmployee(index) {
+    const emp = employees[index];
+    
+    // You can implement an edit modal or redirect to edit page
+    const newName = prompt("Enter new name:", `${emp.firstName} ${emp.lastName}`);
+    if (newName) {
+        const nameParts = newName.split(' ');
+        emp.firstName = nameParts[0] || emp.firstName;
+        emp.lastName = nameParts.slice(1).join(' ') || emp.lastName;
+        
+        const newEmail = prompt("Enter new email:", emp.email);
+        if (newEmail) emp.email = newEmail;
+        
+        const newPhone = prompt("Enter new phone:", emp.phoneNumber);
+        if (newPhone) emp.phoneNumber = newPhone;
+        
+        const newCity = prompt("Enter new city:", emp.city);
+        if (newCity) emp.city = newCity;
+        
+        const newCountry = prompt("Enter new country:", emp.country);
+        if (newCountry) emp.country = newCountry;
+        
+        localStorage.setItem("newEmployees", JSON.stringify(employees));
+        renderTable();
+        
+        // Show edit confirmation
+        const toastEl = document.getElementById('loadToast');
+        const toastBody = toastEl.querySelector('.toast-body');
+        toastBody.textContent = 'Employee updated successfully!';
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+        setTimeout(() => {
+            toastBody.textContent = 'Employees loaded successfully!';
+        }, 2000);
+    }
+}
+
+// 🔹 Render table (only newly added employees)
 function renderTable() {
     const table = document.getElementById("empTable");
     const search = document.getElementById("searchBox").value.toLowerCase();
@@ -164,16 +205,43 @@ function renderTable() {
     const end = start + rowsPerPage;
     const paginated = filtered.slice(start, end);
 
+    if (filtered.length === 0) {
+        table.innerHTML = `<tr><td colspan="7" class="empty-state">
+            <i class="fas fa-user-slash"></i><br>
+            No employees added yet.<br>
+            <small>Click "Add Employee" to add your first employee!</small>
+        </td></tr>`;
+        document.getElementById("pagination").innerHTML = "";
+        return;
+    }
+
     table.innerHTML = "";
-    paginated.forEach((emp,index) => {
-        table.innerHTML += `<tr>
-            <td>${start+index+1}</td>
-            <td>${emp.firstName} ${emp.lastName}</td>
-            <td>${emp.email}</td>
-            <td>${emp.phoneNumber}</td>
-            <td>${emp.city}</td>
-            <td>${emp.country}</td>
-        </tr>`;
+    paginated.forEach((emp, index) => {
+        const originalIndex = employees.findIndex((e, i) => 
+            e.firstName === emp.firstName && 
+            e.lastName === emp.lastName && 
+            e.email === emp.email && 
+            e.timestamp === emp.timestamp
+        );
+        
+        table.innerHTML += `
+            <tr>
+                <td>${start + index + 1}</td>
+                <td><strong>${emp.firstName} ${emp.lastName}</strong></td>
+                <td>${emp.email || 'N/A'}</td>
+                <td>${emp.phoneNumber || 'N/A'}</td>
+                <td>${emp.city || 'N/A'}</td>
+                <td>${emp.country || 'N/A'}</td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-1" onclick="editEmployee(${originalIndex})" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteEmployee(${originalIndex})" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
     });
 
     renderPagination(filtered.length);
@@ -184,16 +252,35 @@ function renderPagination(total){
     const pageCount = Math.ceil(total / rowsPerPage);
     const pagination = document.getElementById("pagination");
     pagination.innerHTML = "";
-    for(let i=1;i<=pageCount;i++){
+    for(let i = 1; i <= pageCount; i++){
         const btn = document.createElement("button");
         btn.innerText = i;
-        btn.className = (i===currentPage) ? "active-page" : "page-btn";
-        btn.onclick = ()=>{ currentPage=i; renderTable(); };
+        btn.className = (i === currentPage) ? "active-page" : "page-btn";
+        btn.onclick = ()=>{ currentPage = i; renderTable(); };
         pagination.appendChild(btn);
     }
 }
 
-// 🔹 Initial load
+// 🔹 Listen for new employees added from other pages
+window.addEventListener("storage", (e) => {
+    if (e.key === "newEmployees") {
+        console.log("New employee detected, refreshing table...");
+        loadEmployees();
+    }
+});
+
+// 🔹 Poll localStorage for changes every 2 seconds
+let lastCount = JSON.parse(localStorage.getItem("newEmployees") || "[]").length;
+setInterval(() => {
+    const current = JSON.parse(localStorage.getItem("newEmployees") || "[]");
+    if (current.length !== lastCount) {
+        lastCount = current.length;
+        console.log("Detected employee change, reloading...");
+        loadEmployees();
+    }
+}, 2000);
+
+// 🔹 Initial load - ONLY newly added employees
 loadEmployees();
 </script>
 
